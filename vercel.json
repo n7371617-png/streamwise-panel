@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/player_api.php",
+      "destination": "/api/player_api"
+    },
+    {
+      "source": "/get.php",
+      "destination": "/api/get"
+    }
+  ]
+}
