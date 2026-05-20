@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as Player_apiDotphpRouteImport } from './routes/player_api[.]php'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as GetDotphpRouteImport } from './routes/get[.]php'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -22,9 +24,19 @@ import { Route as AdminPlaylistsRouteImport } from './routes/admin.playlists'
 import { Route as AdminLogsRouteImport } from './routes/admin.logs'
 import { Route as AdminApiRouteImport } from './routes/admin.api'
 
+const Player_apiDotphpRoute = Player_apiDotphpRouteImport.update({
+  id: '/player_api.php',
+  path: '/player_api.php',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GetDotphpRoute = GetDotphpRouteImport.update({
+  id: '/get.php',
+  path: '/get.php',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -86,7 +98,9 @@ const AdminApiRoute = AdminApiRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/get.php': typeof GetDotphpRoute
   '/login': typeof LoginRoute
+  '/player_api.php': typeof Player_apiDotphpRoute
   '/admin/api': typeof AdminApiRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/playlists': typeof AdminPlaylistsRoute
@@ -99,7 +113,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/get.php': typeof GetDotphpRoute
   '/login': typeof LoginRoute
+  '/player_api.php': typeof Player_apiDotphpRoute
   '/admin/api': typeof AdminApiRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/playlists': typeof AdminPlaylistsRoute
@@ -114,7 +130,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/get.php': typeof GetDotphpRoute
   '/login': typeof LoginRoute
+  '/player_api.php': typeof Player_apiDotphpRoute
   '/admin/api': typeof AdminApiRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/playlists': typeof AdminPlaylistsRoute
@@ -130,7 +148,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/get.php'
     | '/login'
+    | '/player_api.php'
     | '/admin/api'
     | '/admin/logs'
     | '/admin/playlists'
@@ -143,7 +163,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/get.php'
     | '/login'
+    | '/player_api.php'
     | '/admin/api'
     | '/admin/logs'
     | '/admin/playlists'
@@ -157,7 +179,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/get.php'
     | '/login'
+    | '/player_api.php'
     | '/admin/api'
     | '/admin/logs'
     | '/admin/playlists'
@@ -172,16 +196,32 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  GetDotphpRoute: typeof GetDotphpRoute
   LoginRoute: typeof LoginRoute
+  Player_apiDotphpRoute: typeof Player_apiDotphpRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/player_api.php': {
+      id: '/player_api.php'
+      path: '/player_api.php'
+      fullPath: '/player_api.php'
+      preLoaderRoute: typeof Player_apiDotphpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/get.php': {
+      id: '/get.php'
+      path: '/get.php'
+      fullPath: '/get.php'
+      preLoaderRoute: typeof GetDotphpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -293,8 +333,20 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  GetDotphpRoute: GetDotphpRoute,
   LoginRoute: LoginRoute,
+  Player_apiDotphpRoute: Player_apiDotphpRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
