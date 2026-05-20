@@ -59,7 +59,7 @@ function UsersPage() {
   });
 
   const setStatus = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+    mutationFn: async ({ id, status }: { id: string; status: "active" | "disabled" | "banned" | "expired" }) => {
       const { error } = await supabase.from("iptv_users").update({ status }).eq("id", id);
       if (error) throw error;
     },

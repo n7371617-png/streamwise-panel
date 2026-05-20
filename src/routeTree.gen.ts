@@ -10,11 +10,26 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminVodRouteImport } from './routes/admin.vod'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminStreamsRouteImport } from './routes/admin.streams'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminResellersRouteImport } from './routes/admin.resellers'
+import { Route as AdminPlaylistsRouteImport } from './routes/admin.playlists'
+import { Route as AdminLogsRouteImport } from './routes/admin.logs'
+import { Route as AdminApiRouteImport } from './routes/admin.api'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,30 +37,141 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVodRoute = AdminVodRouteImport.update({
+  id: '/vod',
+  path: '/vod',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStreamsRoute = AdminStreamsRouteImport.update({
+  id: '/streams',
+  path: '/streams',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminResellersRoute = AdminResellersRouteImport.update({
+  id: '/resellers',
+  path: '/resellers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPlaylistsRoute = AdminPlaylistsRouteImport.update({
+  id: '/playlists',
+  path: '/playlists',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLogsRoute = AdminLogsRouteImport.update({
+  id: '/logs',
+  path: '/logs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminApiRoute = AdminApiRouteImport.update({
+  id: '/api',
+  path: '/api',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/admin/api': typeof AdminApiRoute
+  '/admin/logs': typeof AdminLogsRoute
+  '/admin/playlists': typeof AdminPlaylistsRoute
+  '/admin/resellers': typeof AdminResellersRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/streams': typeof AdminStreamsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/vod': typeof AdminVodRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/admin/api': typeof AdminApiRoute
+  '/admin/logs': typeof AdminLogsRoute
+  '/admin/playlists': typeof AdminPlaylistsRoute
+  '/admin/resellers': typeof AdminResellersRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/streams': typeof AdminStreamsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/vod': typeof AdminVodRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/admin/api': typeof AdminApiRoute
+  '/admin/logs': typeof AdminLogsRoute
+  '/admin/playlists': typeof AdminPlaylistsRoute
+  '/admin/resellers': typeof AdminResellersRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/streams': typeof AdminStreamsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/vod': typeof AdminVodRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/admin/api'
+    | '/admin/logs'
+    | '/admin/playlists'
+    | '/admin/resellers'
+    | '/admin/settings'
+    | '/admin/streams'
+    | '/admin/users'
+    | '/admin/vod'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/' | '/login'
+  to:
+    | '/'
+    | '/login'
+    | '/admin/api'
+    | '/admin/logs'
+    | '/admin/playlists'
+    | '/admin/resellers'
+    | '/admin/settings'
+    | '/admin/streams'
+    | '/admin/users'
+    | '/admin/vod'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/admin/api'
+    | '/admin/logs'
+    | '/admin/playlists'
+    | '/admin/resellers'
+    | '/admin/settings'
+    | '/admin/streams'
+    | '/admin/users'
+    | '/admin/vod'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
 }
 
@@ -58,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,11 +198,101 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vod': {
+      id: '/admin/vod'
+      path: '/vod'
+      fullPath: '/admin/vod'
+      preLoaderRoute: typeof AdminVodRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/streams': {
+      id: '/admin/streams'
+      path: '/streams'
+      fullPath: '/admin/streams'
+      preLoaderRoute: typeof AdminStreamsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/resellers': {
+      id: '/admin/resellers'
+      path: '/resellers'
+      fullPath: '/admin/resellers'
+      preLoaderRoute: typeof AdminResellersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/playlists': {
+      id: '/admin/playlists'
+      path: '/playlists'
+      fullPath: '/admin/playlists'
+      preLoaderRoute: typeof AdminPlaylistsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/logs': {
+      id: '/admin/logs'
+      path: '/logs'
+      fullPath: '/admin/logs'
+      preLoaderRoute: typeof AdminLogsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/api': {
+      id: '/admin/api'
+      path: '/api'
+      fullPath: '/admin/api'
+      preLoaderRoute: typeof AdminApiRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminApiRoute: typeof AdminApiRoute
+  AdminLogsRoute: typeof AdminLogsRoute
+  AdminPlaylistsRoute: typeof AdminPlaylistsRoute
+  AdminResellersRoute: typeof AdminResellersRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminStreamsRoute: typeof AdminStreamsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminVodRoute: typeof AdminVodRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminApiRoute: AdminApiRoute,
+  AdminLogsRoute: AdminLogsRoute,
+  AdminPlaylistsRoute: AdminPlaylistsRoute,
+  AdminResellersRoute: AdminResellersRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminStreamsRoute: AdminStreamsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminVodRoute: AdminVodRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
