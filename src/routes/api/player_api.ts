@@ -20,16 +20,14 @@ function cors() {
   } as Record<string, string>;
 }
 
-async function getHost(fallback: string) {
-  const { data } = await supabaseAdmin
-    .from("server_settings")
-    .select("domain,https_port,http_port")
-    .eq("id", 1)
-    .maybeSingle();
+const DEFAULT_HOST = "streamwise-panel.vercel.app";
+const DEFAULT_PROTOCOL = "https";
+
+async function getHost() {
   return {
-    url: data?.domain || fallback,
-    https_port: String(data?.https_port ?? 443),
-    http_port: String(data?.http_port ?? 80),
+    url: DEFAULT_HOST,
+    https_port: "443",
+    http_port: "443",
   };
 }
 
