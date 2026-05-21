@@ -6,28 +6,36 @@ export const Route = createFileRoute("/api/player_api")({
     handlers: {
       GET: async ({ request }) => handle(request),
       POST: async ({ request }) => handle(request),
-      OPTIONS: async () =>
-        new Response(null, { status: 204, headers: cors() }),
+      OPTIONS: async () => new Response(null, { status: 204, headers: cors() }),
     },
   },
 });
 
-function cors() {
+const DEFAULT_HOST_URL = "https://streamwise-panel.vercel.app";
+
+function cors(): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  } as Record<string, string>;
+  };
 }
 
-const DEFAULT_HOST = "streamwise-panel.vercel.app";
-const DEFAULT_PROTOCOL = "https";
+function jsonHeaders(): Record<string, string> {
+  return { "Content-Type": "application/json; charset=utf-8", ...cors() };
+}
 
-async function getHost() {
+function serverInfo() {
   return {
-    url: DEFAULT_HOST,
+    url: DEFAULT_HOST_URL,
+    port: "80",
     https_port: "443",
-    http_port: "443",
+    server_protocol: "https",
+    rtmp_port: "8880",
+    timezone: "UTC",
+    timestamp_now: Math.floor(Date.now() / 1000),
+    server_time: String(Math.floor(Date.now() / 1000)),
+    time_now: new Date().toISOString(),
   };
 }
 
@@ -36,7 +44,15 @@ async function handle(request: Request) {
   const username = url.searchParams.get("username") ?? "";
   const password = url.searchParams.get("password") ?? "";
   const action = url.searchParams.get("action") ?? "";
-  const headers = { "Content-Type": "application/json; charset=utf-8", ...cors() };
+  const headers = jsonHeaders();
+
+  // Initial probe — no credentials: return server_info only
+  if (!username && !password) {
+    return new Response(
+      JSON.stringify({ server_info: serverInfo() }),
+      { status: 200, headers },
+    );
+  }
 
   const { data: user } = await supabaseAdmin
     .from("iptv_users")
@@ -47,12 +63,14 @@ async function handle(request: Request) {
 
   if (!user || user.status !== "active") {
     return new Response(
-      JSON.stringify({ user_info: { auth: 0, status: "Disabled" } }),
+      JSON.stringify({
+        user_info: { auth: 0, status: "Disabled" },
+        server_info: serverInfo(),
+      }),
       { status: 401, headers },
     );
   }
 
-  const host = await getHost();
   const baseInfo = {
     user_info: {
       username: user.username,
@@ -69,16 +87,7 @@ async function handle(request: Request) {
       max_connections: String(user.max_connections),
       allowed_output_formats: ["m3u8", "ts", "rtmp"],
     },
-    server_info: {
-      url: host.url,
-      port: host.http_port,
-      https_port: host.https_port,
-      server_protocol: "https",
-      rtmp_port: "8880",
-      timezone: "UTC",
-      timestamp_now: Math.floor(Date.now() / 1000),
-      time_now: new Date().toISOString(),
-    },
+    server_info: serverInfo(),
   };
 
   if (!action) return new Response(JSON.stringify(baseInfo), { headers });
