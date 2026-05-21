@@ -52,7 +52,7 @@ async function handle(request: Request) {
     );
   }
 
-  const host = await getHost(url.hostname);
+  const host = await getHost();
   const baseInfo = {
     user_info: {
       username: user.username,
