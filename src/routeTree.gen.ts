@@ -15,6 +15,9 @@ import { Route as GetDotphpRouteImport } from './routes/get[.]php'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as ApiXmltvRouteImport } from './routes/api/xmltv'
+import { Route as ApiPlayer_apiRouteImport } from './routes/api/player_api'
+import { Route as ApiGetRouteImport } from './routes/api/get'
 import { Route as AdminVodRouteImport } from './routes/admin.vod'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminStreamsRouteImport } from './routes/admin.streams'
@@ -53,6 +56,21 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const ApiXmltvRoute = ApiXmltvRouteImport.update({
+  id: '/api/xmltv',
+  path: '/api/xmltv',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPlayer_apiRoute = ApiPlayer_apiRouteImport.update({
+  id: '/api/player_api',
+  path: '/api/player_api',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGetRoute = ApiGetRouteImport.update({
+  id: '/api/get',
+  path: '/api/get',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminVodRoute = AdminVodRouteImport.update({
   id: '/vod',
@@ -109,6 +127,9 @@ export interface FileRoutesByFullPath {
   '/admin/streams': typeof AdminStreamsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/vod': typeof AdminVodRoute
+  '/api/get': typeof ApiGetRoute
+  '/api/player_api': typeof ApiPlayer_apiRoute
+  '/api/xmltv': typeof ApiXmltvRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -124,6 +145,9 @@ export interface FileRoutesByTo {
   '/admin/streams': typeof AdminStreamsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/vod': typeof AdminVodRoute
+  '/api/get': typeof ApiGetRoute
+  '/api/player_api': typeof ApiPlayer_apiRoute
+  '/api/xmltv': typeof ApiXmltvRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -141,6 +165,9 @@ export interface FileRoutesById {
   '/admin/streams': typeof AdminStreamsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/vod': typeof AdminVodRoute
+  '/api/get': typeof ApiGetRoute
+  '/api/player_api': typeof ApiPlayer_apiRoute
+  '/api/xmltv': typeof ApiXmltvRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -159,6 +186,9 @@ export interface FileRouteTypes {
     | '/admin/streams'
     | '/admin/users'
     | '/admin/vod'
+    | '/api/get'
+    | '/api/player_api'
+    | '/api/xmltv'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -174,6 +204,9 @@ export interface FileRouteTypes {
     | '/admin/streams'
     | '/admin/users'
     | '/admin/vod'
+    | '/api/get'
+    | '/api/player_api'
+    | '/api/xmltv'
     | '/admin'
   id:
     | '__root__'
@@ -190,6 +223,9 @@ export interface FileRouteTypes {
     | '/admin/streams'
     | '/admin/users'
     | '/admin/vod'
+    | '/api/get'
+    | '/api/player_api'
+    | '/api/xmltv'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -199,6 +235,9 @@ export interface RootRouteChildren {
   GetDotphpRoute: typeof GetDotphpRoute
   LoginRoute: typeof LoginRoute
   Player_apiDotphpRoute: typeof Player_apiDotphpRoute
+  ApiGetRoute: typeof ApiGetRoute
+  ApiPlayer_apiRoute: typeof ApiPlayer_apiRoute
+  ApiXmltvRoute: typeof ApiXmltvRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -244,6 +283,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/api/xmltv': {
+      id: '/api/xmltv'
+      path: '/api/xmltv'
+      fullPath: '/api/xmltv'
+      preLoaderRoute: typeof ApiXmltvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/player_api': {
+      id: '/api/player_api'
+      path: '/api/player_api'
+      fullPath: '/api/player_api'
+      preLoaderRoute: typeof ApiPlayer_apiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/get': {
+      id: '/api/get'
+      path: '/api/get'
+      fullPath: '/api/get'
+      preLoaderRoute: typeof ApiGetRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/vod': {
       id: '/admin/vod'
@@ -336,6 +396,9 @@ const rootRouteChildren: RootRouteChildren = {
   GetDotphpRoute: GetDotphpRoute,
   LoginRoute: LoginRoute,
   Player_apiDotphpRoute: Player_apiDotphpRoute,
+  ApiGetRoute: ApiGetRoute,
+  ApiPlayer_apiRoute: ApiPlayer_apiRoute,
+  ApiXmltvRoute: ApiXmltvRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
