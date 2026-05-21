@@ -1,12 +1,9 @@
 {
   "rewrites": [
-    {
-      "source": "/player_api.php",
-      "destination": "/api/player_api"
-    },
-    {
-      "source": "/get.php",
-      "destination": "/api/get"
-    }
+    { "source": "/player_api.php", "destination": "/api/player_api" },
+    { "source": "/get.php", "destination": "/api/get" },
+    { "source": "/xmltv.php", "destination": "/api/xmltv" },
+    { "source": "/c/(.*)", "destination": "/api/mag" },
+    { "source": "/c", "destination": "/api/mag" }
   ]
 }
