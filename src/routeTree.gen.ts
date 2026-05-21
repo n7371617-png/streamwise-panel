@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ApiXmltvRouteImport } from './routes/api/xmltv'
 import { Route as ApiPlayer_apiRouteImport } from './routes/api/player_api'
+import { Route as ApiMagRouteImport } from './routes/api/mag'
 import { Route as ApiGetRouteImport } from './routes/api/get'
 import { Route as AdminVodRouteImport } from './routes/admin.vod'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
@@ -65,6 +66,11 @@ const ApiXmltvRoute = ApiXmltvRouteImport.update({
 const ApiPlayer_apiRoute = ApiPlayer_apiRouteImport.update({
   id: '/api/player_api',
   path: '/api/player_api',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMagRoute = ApiMagRouteImport.update({
+  id: '/api/mag',
+  path: '/api/mag',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiGetRoute = ApiGetRouteImport.update({
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRoute
   '/admin/vod': typeof AdminVodRoute
   '/api/get': typeof ApiGetRoute
+  '/api/mag': typeof ApiMagRoute
   '/api/player_api': typeof ApiPlayer_apiRoute
   '/api/xmltv': typeof ApiXmltvRoute
   '/admin/': typeof AdminIndexRoute
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRoute
   '/admin/vod': typeof AdminVodRoute
   '/api/get': typeof ApiGetRoute
+  '/api/mag': typeof ApiMagRoute
   '/api/player_api': typeof ApiPlayer_apiRoute
   '/api/xmltv': typeof ApiXmltvRoute
   '/admin': typeof AdminIndexRoute
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRoute
   '/admin/vod': typeof AdminVodRoute
   '/api/get': typeof ApiGetRoute
+  '/api/mag': typeof ApiMagRoute
   '/api/player_api': typeof ApiPlayer_apiRoute
   '/api/xmltv': typeof ApiXmltvRoute
   '/admin/': typeof AdminIndexRoute
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/vod'
     | '/api/get'
+    | '/api/mag'
     | '/api/player_api'
     | '/api/xmltv'
     | '/admin/'
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/vod'
     | '/api/get'
+    | '/api/mag'
     | '/api/player_api'
     | '/api/xmltv'
     | '/admin'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/vod'
     | '/api/get'
+    | '/api/mag'
     | '/api/player_api'
     | '/api/xmltv'
     | '/admin/'
@@ -236,6 +248,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   Player_apiDotphpRoute: typeof Player_apiDotphpRoute
   ApiGetRoute: typeof ApiGetRoute
+  ApiMagRoute: typeof ApiMagRoute
   ApiPlayer_apiRoute: typeof ApiPlayer_apiRoute
   ApiXmltvRoute: typeof ApiXmltvRoute
 }
@@ -296,6 +309,13 @@ declare module '@tanstack/react-router' {
       path: '/api/player_api'
       fullPath: '/api/player_api'
       preLoaderRoute: typeof ApiPlayer_apiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mag': {
+      id: '/api/mag'
+      path: '/api/mag'
+      fullPath: '/api/mag'
+      preLoaderRoute: typeof ApiMagRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/get': {
@@ -397,6 +417,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   Player_apiDotphpRoute: Player_apiDotphpRoute,
   ApiGetRoute: ApiGetRoute,
+  ApiMagRoute: ApiMagRoute,
   ApiPlayer_apiRoute: ApiPlayer_apiRoute,
   ApiXmltvRoute: ApiXmltvRoute,
 }
