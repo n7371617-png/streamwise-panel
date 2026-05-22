@@ -151,23 +151,62 @@ Deno.serve(async (req) => {
     const { data } = await supabase.from("vod_movies").select("*").limit(5000);
     return new Response(
       JSON.stringify(
-        (data ?? []).map((m, i) => ({
-          num: i + 1,
-          name: m.title,
-          stream_type: "movie",
-          stream_id: i + 1,
-          stream_icon: m.poster,
-          rating: m.rating,
-          rating_5based: m.rating,
-          added: "",
-          category_id: "0",
-          container_extension: "mp4",
-          custom_sid: "",
-          direct_source: m.url,
-        })),
+        (data ?? []).map((m, i) => {
+          const ext = extractExt(m.url) ?? "mp4";
+          return {
+            num: i + 1,
+            name: m.title,
+            stream_type: "movie",
+            stream_id: i + 1,
+            stream_icon: m.poster,
+            rating: m.rating,
+            rating_5based: m.rating,
+            added: "",
+            category_id: "0",
+            container_extension: ext,
+            custom_sid: "",
+            direct_source: m.url,
+          };
+        }),
       ),
       { headers: jsonHeaders },
     );
+  }
+
+  if (action === "get_vod_info") {
+    const vodId = url.searchParams.get("vod_id");
+    const { data: movies } = await supabase.from("vod_movies").select("*").limit(5000);
+    const idx = Number(vodId) - 1;
+    const m = movies?.[idx];
+    if (!m) return new Response(JSON.stringify({}), { headers: jsonHeaders });
+    const ext = extractExt(m.url) ?? "mp4";
+    return new Response(JSON.stringify({
+      info: { movie_image: m.poster, name: m.title, description: m.description, plot: m.description, releasedate: String(m.year ?? ""), rating: m.rating, duration: m.duration_min ? `${m.duration_min} min` : "", genre: m.genre },
+      movie_data: { stream_id: Number(vodId), name: m.title, added: "", category_id: "0", container_extension: ext, direct_source: m.url },
+    }), { headers: jsonHeaders });
+  }
+
+  if (action === "get_series_info") {
+    const seriesId = url.searchParams.get("series_id");
+    const { data: series } = await supabase.from("vod_series").select("*").eq("id", seriesId).maybeSingle();
+    const { data: eps } = await supabase.from("vod_episodes").select("*").eq("series_id", seriesId).order("season").order("episode");
+    const episodes: Record<string, unknown[]> = {};
+    (eps ?? []).forEach((e) => {
+      const season = String(e.season ?? 1);
+      const ext = extractExt(e.url) ?? "mp4";
+      (episodes[season] ||= []).push({
+        id: String(e.id),
+        episode_num: e.episode,
+        title: e.title,
+        container_extension: ext,
+        info: { duration: e.duration_min ? `${e.duration_min} min` : "" },
+        direct_source: e.url,
+      });
+    });
+    return new Response(JSON.stringify({
+      info: { name: series?.title, cover: series?.poster, plot: series?.description, releaseDate: String(series?.year ?? ""), rating: series?.rating, category_id: "0" },
+      episodes,
+    }), { headers: jsonHeaders });
   }
 
   if (action === "get_series") {
