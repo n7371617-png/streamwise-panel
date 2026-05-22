@@ -16,6 +16,14 @@ const jsonHeaders = {
   ...cors,
 };
 
+function extractExt(u?: string | null): string | null {
+  if (!u) return null;
+  const m = u.split("?")[0].match(/\.([a-zA-Z0-9]{2,5})$/);
+  if (!m) return null;
+  const ext = m[1].toLowerCase();
+  return ["mp4", "mkv", "avi", "mov", "ts", "m3u8", "webm", "flv"].includes(ext) ? ext : null;
+}
+
 function serverInfo() {
   const now = Math.floor(Date.now() / 1000);
   return {
